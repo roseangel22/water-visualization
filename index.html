@@ -10,9 +10,13 @@
   --bg:#f5f7f6;
   --card:#ffffff;
   --muted:#6b7280;
+
+  /* ESRT-ish palette (tweak if you have exact brand hex) */
   --esrt-green:#00594c;
   --esrt-blue:#007fa3;
+
   --water:#007fa3;
+  --glass-stroke:#cfd8dc;
 }
 
 body{
@@ -56,7 +60,6 @@ body{
   font-weight:600;
   color:var(--esrt-green);
 }
-
 .subtitle{
   font-size:14px;
   color:var(--muted);
@@ -98,6 +101,18 @@ body{
   transition:width 1.4s cubic-bezier(.2,.9,.3,1);
 }
 
+/* Subtle, seamless water surface wobble */
+@keyframes surfaceWobble {
+  0%   { transform: translateX(0px) scaleX(1); }
+  50%  { transform: translateX(-10px) scaleX(1.02); }
+  100% { transform: translateX(0px) scaleX(1); }
+}
+
+.surface-line {
+  animation: surfaceWobble 3.6s ease-in-out infinite;
+  transform-origin: 50% 50%;
+}
+
 @media (max-width:820px){
   .module{ flex-direction:column; }
 }
@@ -105,16 +120,13 @@ body{
 </head>
 
 <body>
-
 <div class="module">
 
   <!-- GLASS -->
   <div class="glass-card">
-    <svg viewBox="0 0 200 360" width="200" height="360">
-
+    <svg id="glassSvg" viewBox="0 0 200 360" width="200" height="360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Water glass showing fill level">
       <defs>
-
-        <!-- Minimal architectural straight glass -->
+        <!-- Minimal straight-edged glass -->
         <path id="glassShape"
           d="M60 20
              L140 20
@@ -132,31 +144,31 @@ body{
           <stop offset="100%" stop-color="#00594c"/>
         </linearGradient>
 
-        <!-- Wide wave for seamless looping -->
-        <path id="wavePath"
-          d="M0 30
-             Q40 10 80 30
-             T160 30
-             T240 30
-             V80 H0 Z"/>
-
+        <!-- Glass shine gradient for subtle reflections -->
+        <linearGradient id="shineGrad" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.0)"/>
+          <stop offset="35%" stop-color="rgba(255,255,255,0.35)"/>
+          <stop offset="65%" stop-color="rgba(255,255,255,0.10)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0.0)"/>
+        </linearGradient>
       </defs>
 
-      <!-- Glass outline -->
+      <!-- Glass body (transparent) -->
       <use href="#glassShape"
-           fill="rgba(255,255,255,0.25)"
-           stroke="#cfd8dc"
-           stroke-width="3"/>
+           fill="rgba(255,255,255,0.18)"
+           stroke="var(--glass-stroke)"
+           stroke-width="3"
+           stroke-linejoin="round"/>
 
-      <!-- Subtle highlight -->
-      <path d="M70 40 L85 320"
-            stroke="rgba(255,255,255,0.4)"
-            stroke-width="6"
-            opacity="0.4"/>
+      <!-- A subtle inner edge to feel like real glass -->
+      <path d="M66 26 L137 26 L154 314 Q154 330 100 334 Q46 330 46 314 Z"
+            fill="none"
+            stroke="rgba(255,255,255,0.35)"
+            stroke-width="1.5"
+            opacity="0.7"/>
 
-      <!-- WATER -->
+      <!-- Water + surface -->
       <g clip-path="url(#clipGlass)">
-
         <rect id="waterRect"
               x="0"
               y="320"
@@ -165,48 +177,48 @@ body{
               fill="url(#waterGrad)"
               opacity="0.95"/>
 
-        <g id="waveGroup">
-
-          <!-- Wave 1 -->
-          <use href="#wavePath"
-               fill="#007fa3"
-               opacity="0.6">
-            <animateTransform
-              attributeName="transform"
-              type="translate"
-              from="0 0"
-              to="-160 0"
-              dur="4s"
-              repeatCount="indefinite"/>
-          </use>
-
-          <!-- Wave 2 -->
-          <use href="#wavePath"
-               fill="#00594c"
-               opacity="0.35"
-               x="160">
-            <animateTransform
-              attributeName="transform"
-              type="translate"
-              from="0 0"
-              to="-160 0"
-              dur="6s"
-              repeatCount="indefinite"/>
-          </use>
-
+        <!-- Surface group will be translated vertically to sit on top of the water -->
+        <g id="surfaceGroup" class="surface-line">
+          <!-- One elegant wavy line -->
+          <path id="surfacePath"
+                d="M20 0
+                   C45 -4, 65 4, 90 0
+                   C115 -4, 135 4, 160 0"
+                fill="none"
+                stroke="rgba(255,255,255,0.75)"
+                stroke-width="2.2"
+                stroke-linecap="round"/>
+          <!-- faint secondary line for depth -->
+          <path
+                d="M22 4
+                   C47 0, 67 8, 92 4
+                   C117 0, 137 8, 162 4"
+                fill="none"
+                stroke="rgba(0,0,0,0.06)"
+                stroke-width="2"
+                stroke-linecap="round"
+                opacity="0.6"/>
         </g>
       </g>
 
+      <!-- Glass highlight reflection (on top of everything) -->
+      <path d="M72 34 L88 318"
+            stroke="url(#shineGrad)"
+            stroke-width="10"
+            opacity="0.55"
+            stroke-linecap="round"/>
+
+      <!-- Secondary thin highlight -->
+      <path d="M92 32 L100 320"
+            stroke="rgba(255,255,255,0.25)"
+            stroke-width="3"
+            opacity="0.6"
+            stroke-linecap="round"/>
     </svg>
 
     <div style="margin-top:14px;text-align:center">
-      <div id="glassPercent"
-           style="font-size:20px;font-weight:700;color:var(--esrt-green)">
-        -6.15%
-      </div>
-      <div style="font-size:14px;color:var(--muted)">
-        decrease vs 2023
-      </div>
+      <div id="glassPercent" style="font-size:20px;font-weight:700;color:var(--esrt-green)">-6.15%</div>
+      <div style="font-size:14px;color:var(--muted)">decrease vs 2023</div>
     </div>
   </div>
 
@@ -214,31 +226,19 @@ body{
   <div class="info">
     <div>
       <div class="title">2024 NYC Commercial Office Water Use</div>
-      <div class="subtitle">
-        Visualization of change and intensity for 2024
-      </div>
+      <div class="subtitle">Visualization of change and intensity for 2024</div>
     </div>
 
     <div class="stats-row">
       <div class="stat">
-        <div class="big">
-          <span id="percentValue">0.00</span>%
-        </div>
-        <div class="small">
-          Decrease in water consumption compared to 2023
-        </div>
+        <div class="big"><span id="percentValue">0.00</span>%</div>
+        <div class="small">Decrease in water consumption compared to 2023</div>
       </div>
 
       <div class="stat">
-        <div class="big">
-          <span id="intensityValue">0.000</span> kgal/ft²
-        </div>
-        <div class="small">
-          2024 water use intensity
-        </div>
-        <div class="meter">
-          <div id="meterFill" class="meter-fill"></div>
-        </div>
+        <div class="big"><span id="intensityValue">0.000</span> kgal/ft²</div>
+        <div class="small">2024 water use intensity</div>
+        <div class="meter"><div id="meterFill" class="meter-fill"></div></div>
       </div>
     </div>
   </div>
@@ -249,10 +249,12 @@ body{
 const percentDecrease = 6.15;
 const intensityVal = 0.153;
 
-const baselineFill = 0.5;
+// Start empty -> fill to about half -> drop by 6.15% of that baseline
+const baselineFill = 0.50;
 const finalFill = baselineFill * (1 - percentDecrease/100);
 
 const waterRect = document.getElementById('waterRect');
+const surfaceGroup = document.getElementById('surfaceGroup');
 const meterFill = document.getElementById('meterFill');
 
 const INNER_TOP = 20;
@@ -262,20 +264,25 @@ const INNER_HEIGHT = INNER_BOTTOM - INNER_TOP;
 function easeOut(t){ return 1 - Math.pow(1-t,3); }
 
 function setWater(level){
+  level = Math.max(0, Math.min(1, level));
   const h = INNER_HEIGHT * level;
   const y = INNER_BOTTOM - h;
+
   waterRect.setAttribute('y', y);
   waterRect.setAttribute('height', h);
-  document.getElementById('waveGroup')
-    .setAttribute('transform', `translate(0, ${y-30})`);
+
+  // surface sits at top of water; offset slightly so line straddles the boundary
+  surfaceGroup.setAttribute('transform', `translate(0, ${y})`);
+  surfaceGroup.style.opacity = (h <= 1) ? "0" : "1"; // hide when empty
 }
 
-function animate(from,to,duration,cb){
+function animate(from,to,duration,cb,done){
   const start=performance.now();
   function step(now){
     const t=Math.min((now-start)/duration,1);
     cb(from+(to-from)*easeOut(t));
     if(t<1) requestAnimationFrame(step);
+    else if(done) done();
   }
   requestAnimationFrame(step);
 }
@@ -294,16 +301,28 @@ function animateNumber(id,end,dec){
 function run(){
   setWater(0);
 
-  animate(0,baselineFill,1000,setWater);
-  setTimeout(()=>animate(baselineFill,finalFill,800,setWater),1200);
+  animate(0, baselineFill, 1100, setWater, () => {
+    setTimeout(() => animate(baselineFill, finalFill, 900, setWater), 250);
+  });
 
-  animateNumber("percentValue",percentDecrease,2);
-  animateNumber("intensityValue",intensityVal,3);
+  animateNumber("percentValue", percentDecrease, 2);
+  animateNumber("intensityValue", intensityVal, 3);
 
-  meterFill.style.width=(intensityVal/0.6*100)+"%";
+  const maxForMeter = 0.6;
+  meterFill.style.width = Math.min(100, (intensityVal / maxForMeter) * 100) + "%";
 }
 
-setTimeout(run,200);
+const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+if (mq.matches) {
+  document.getElementById('percentValue').textContent = percentDecrease.toFixed(2);
+  document.getElementById('intensityValue').textContent = intensityVal.toFixed(3);
+  setWater(finalFill);
+  meterFill.style.width = Math.min(100, (intensityVal / 0.6) * 100) + "%";
+  // stop surface animation
+  surfaceGroup.classList.remove('surface-line');
+} else {
+  setTimeout(run, 200);
+}
 </script>
 
 </body>
