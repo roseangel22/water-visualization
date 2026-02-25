@@ -11,11 +11,10 @@
   --card:#ffffff;
   --muted:#6b7280;
 
-  /* ESRT-ish palette (tweak if you have exact brand hex) */
+  /* ESRT-ish palette (swap to exact brand hex if you have it) */
   --esrt-green:#00594c;
   --esrt-blue:#007fa3;
 
-  --water:#007fa3;
   --glass-stroke:#cfd8dc;
 }
 
@@ -43,9 +42,7 @@ body{
   flex-wrap:wrap;
 }
 
-.glass-card{
-  padding:10px;
-}
+.glass-card{ padding:10px; }
 
 .info{
   flex:1;
@@ -55,36 +52,15 @@ body{
   gap:16px;
 }
 
-.title{
-  font-size:20px;
-  font-weight:600;
-  color:var(--esrt-green);
-}
-.subtitle{
-  font-size:14px;
-  color:var(--muted);
-}
+.title{ font-size:20px; font-weight:600; color:var(--esrt-green); }
+.subtitle{ font-size:14px; color:var(--muted); }
 
-.stats-row{
-  display:flex;
-  gap:24px;
-  flex-wrap:wrap;
-}
+.stats-row{ display:flex; gap:24px; flex-wrap:wrap; }
 
-.stat{
-  min-width:200px;
-}
+.stat{ min-width:220px; }
 
-.big{
-  font-size:32px;
-  font-weight:700;
-  color:var(--esrt-green);
-}
-
-.small{
-  font-size:14px;
-  color:var(--muted);
-}
+.big{ font-size:32px; font-weight:700; color:var(--esrt-green); }
+.small{ font-size:14px; color:var(--muted); }
 
 .meter{
   height:10px;
@@ -93,7 +69,6 @@ body{
   overflow:hidden;
   margin-top:8px;
 }
-
 .meter-fill{
   height:100%;
   width:0%;
@@ -101,15 +76,14 @@ body{
   transition:width 1.4s cubic-bezier(.2,.9,.3,1);
 }
 
-/* Subtle, seamless water surface wobble */
+/* Gentle surface wobble: subtle + seamless */
 @keyframes surfaceWobble {
-  0%   { transform: translateX(0px) scaleX(1); }
-  50%  { transform: translateX(-10px) scaleX(1.02); }
-  100% { transform: translateX(0px) scaleX(1); }
+  0%   { transform: translateX(0px); }
+  50%  { transform: translateX(-9px); }
+  100% { transform: translateX(0px); }
 }
-
-.surface-line {
-  animation: surfaceWobble 3.6s ease-in-out infinite;
+.surface-line{
+  animation: surfaceWobble 3.8s ease-in-out infinite;
   transform-origin: 50% 50%;
 }
 
@@ -122,98 +96,118 @@ body{
 <body>
 <div class="module">
 
-  <!-- GLASS -->
+  <!-- PINT GLASS -->
   <div class="glass-card">
-    <svg id="glassSvg" viewBox="0 0 200 360" width="200" height="360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Water glass showing fill level">
+    <svg viewBox="0 0 220 360" width="220" height="360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pint glass showing water level">
       <defs>
-        <!-- Minimal straight-edged glass -->
-        <path id="glassShape"
-          d="M60 20
-             L140 20
-             L160 320
-             Q160 340 100 345
-             Q40 340 40 320
+        <!-- Pint glass: slightly tapered, straight-ish sides, thicker base -->
+        <path id="pintShape"
+          d="M70 24
+             Q70 16 110 16
+             Q150 16 150 24
+             L165 300
+             Q166 318 110 332
+             Q54 318 55 300
              Z"/>
 
-        <clipPath id="clipGlass">
-          <use href="#glassShape"/>
+        <clipPath id="clipPint">
+          <use href="#pintShape"/>
         </clipPath>
 
+        <!-- Water gradient: calmer, less "shiny" -->
         <linearGradient id="waterGrad" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#0093b5"/>
-          <stop offset="100%" stop-color="#00594c"/>
+          <stop offset="0%" stop-color="#1aa0c6" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#007fa3" stop-opacity="0.95"/>
         </linearGradient>
 
-        <!-- Glass shine gradient for subtle reflections -->
-        <linearGradient id="shineGrad" x1="0" x2="1" y1="0" y2="0">
-          <stop offset="0%" stop-color="rgba(255,255,255,0.0)"/>
-          <stop offset="35%" stop-color="rgba(255,255,255,0.35)"/>
-          <stop offset="65%" stop-color="rgba(255,255,255,0.10)"/>
+        <!-- Subtle glass reflection gradient (NOT on the water) -->
+        <linearGradient id="glassShine" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.00)"/>
+          <stop offset="30%" stop-color="rgba(255,255,255,0.32)"/>
+          <stop offset="55%" stop-color="rgba(255,255,255,0.10)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0.00)"/>
+        </linearGradient>
+
+        <!-- Subtle rim highlight -->
+        <linearGradient id="rimGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.85)"/>
           <stop offset="100%" stop-color="rgba(255,255,255,0.0)"/>
         </linearGradient>
       </defs>
 
-      <!-- Glass body (transparent) -->
-      <use href="#glassShape"
-           fill="rgba(255,255,255,0.18)"
+      <!-- Glass fill (transparent) -->
+      <use href="#pintShape"
+           fill="rgba(255,255,255,0.16)"
            stroke="var(--glass-stroke)"
            stroke-width="3"
            stroke-linejoin="round"/>
 
-      <!-- A subtle inner edge to feel like real glass -->
-      <path d="M66 26 L137 26 L154 314 Q154 330 100 334 Q46 330 46 314 Z"
-            fill="none"
-            stroke="rgba(255,255,255,0.35)"
-            stroke-width="1.5"
-            opacity="0.7"/>
+      <!-- Rim line (pint glass feel) -->
+      <path d="M76 24 L144 24"
+            stroke="url(#rimGrad)"
+            stroke-width="5"
+            stroke-linecap="round"
+            opacity="0.8"/>
 
-      <!-- Water + surface -->
-      <g clip-path="url(#clipGlass)">
+      <!-- Inner lip -->
+      <path d="M78 28 L142 28"
+            stroke="rgba(255,255,255,0.35)"
+            stroke-width="2"
+            stroke-linecap="round"
+            opacity="0.9"/>
+
+      <!-- Base thickness -->
+      <path d="M58 306
+               Q60 323 110 336
+               Q160 323 162 306"
+            fill="none"
+            stroke="rgba(210,220,224,0.9)"
+            stroke-width="8"
+            stroke-linecap="round"
+            opacity="0.85"/>
+
+      <!-- WATER (clipped) -->
+      <g clip-path="url(#clipPint)">
         <rect id="waterRect"
               x="0"
-              y="320"
-              width="200"
+              y="300"
+              width="220"
               height="0"
-              fill="url(#waterGrad)"
-              opacity="0.95"/>
+              fill="url(#waterGrad)"/>
 
-        <!-- Surface group will be translated vertically to sit on top of the water -->
-        <g id="surfaceGroup" class="surface-line">
-          <!-- One elegant wavy line -->
-          <path id="surfacePath"
-                d="M20 0
-                   C45 -4, 65 4, 90 0
-                   C115 -4, 135 4, 160 0"
+        <!-- water surface: just a wavy line, no "shine" blocks -->
+        <g id="surfaceGroup" class="surface-line" opacity="0">
+          <path d="M62 0
+                   C82 -3, 96 3, 110 0
+                   C124 -3, 138 3, 158 0"
                 fill="none"
-                stroke="rgba(255,255,255,0.75)"
-                stroke-width="2.2"
+                stroke="rgba(255,255,255,0.70)"
+                stroke-width="2.1"
                 stroke-linecap="round"/>
-          <!-- faint secondary line for depth -->
-          <path
-                d="M22 4
-                   C47 0, 67 8, 92 4
-                   C117 0, 137 8, 162 4"
+          <path d="M62 4
+                   C82 1, 96 7, 110 4
+                   C124 1, 138 7, 158 4"
                 fill="none"
-                stroke="rgba(0,0,0,0.06)"
+                stroke="rgba(0,0,0,0.07)"
                 stroke-width="2"
                 stroke-linecap="round"
-                opacity="0.6"/>
+                opacity="0.55"/>
         </g>
       </g>
 
-      <!-- Glass highlight reflection (on top of everything) -->
-      <path d="M72 34 L88 318"
-            stroke="url(#shineGrad)"
-            stroke-width="10"
-            opacity="0.55"
-            stroke-linecap="round"/>
+      <!-- Glass reflections (on glass, not water) -->
+      <path d="M86 42 L98 292"
+            stroke="url(#glassShine)"
+            stroke-width="12"
+            stroke-linecap="round"
+            opacity="0.65"/>
 
-      <!-- Secondary thin highlight -->
-      <path d="M92 32 L100 320"
-            stroke="rgba(255,255,255,0.25)"
-            stroke-width="3"
-            opacity="0.6"
-            stroke-linecap="round"/>
+      <path d="M104 40 L110 295"
+            stroke="rgba(255,255,255,0.18)"
+            stroke-width="4"
+            stroke-linecap="round"
+            opacity="0.75"/>
+
     </svg>
 
     <div style="margin-top:14px;text-align:center">
@@ -249,7 +243,7 @@ body{
 const percentDecrease = 6.15;
 const intensityVal = 0.153;
 
-// Start empty -> fill to about half -> drop by 6.15% of that baseline
+// Empty -> about half -> down by 6.15% of baseline
 const baselineFill = 0.50;
 const finalFill = baselineFill * (1 - percentDecrease/100);
 
@@ -257,8 +251,8 @@ const waterRect = document.getElementById('waterRect');
 const surfaceGroup = document.getElementById('surfaceGroup');
 const meterFill = document.getElementById('meterFill');
 
-const INNER_TOP = 20;
-const INNER_BOTTOM = 320;
+const INNER_TOP = 28;     // inside rim
+const INNER_BOTTOM = 300; // top of base
 const INNER_HEIGHT = INNER_BOTTOM - INNER_TOP;
 
 function easeOut(t){ return 1 - Math.pow(1-t,3); }
@@ -271,29 +265,29 @@ function setWater(level){
   waterRect.setAttribute('y', y);
   waterRect.setAttribute('height', h);
 
-  // surface sits at top of water; offset slightly so line straddles the boundary
+  // surface line sits on the boundary
   surfaceGroup.setAttribute('transform', `translate(0, ${y})`);
-  surfaceGroup.style.opacity = (h <= 1) ? "0" : "1"; // hide when empty
+  surfaceGroup.style.opacity = (h <= 1) ? "0" : "1";
 }
 
 function animate(from,to,duration,cb,done){
-  const start=performance.now();
+  const start = performance.now();
   function step(now){
-    const t=Math.min((now-start)/duration,1);
-    cb(from+(to-from)*easeOut(t));
-    if(t<1) requestAnimationFrame(step);
+    const t = Math.min((now-start)/duration, 1);
+    cb(from + (to-from)*easeOut(t));
+    if(t < 1) requestAnimationFrame(step);
     else if(done) done();
   }
   requestAnimationFrame(step);
 }
 
 function animateNumber(id,end,dec){
-  const el=document.getElementById(id);
-  const start=performance.now();
+  const el = document.getElementById(id);
+  const start = performance.now();
   function step(now){
-    const t=Math.min((now-start)/1400,1);
-    el.textContent=(end*easeOut(t)).toFixed(dec);
-    if(t<1) requestAnimationFrame(step);
+    const t = Math.min((now-start)/1400, 1);
+    el.textContent = (end*easeOut(t)).toFixed(dec);
+    if(t < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
@@ -318,7 +312,6 @@ if (mq.matches) {
   document.getElementById('intensityValue').textContent = intensityVal.toFixed(3);
   setWater(finalFill);
   meterFill.style.width = Math.min(100, (intensityVal / 0.6) * 100) + "%";
-  // stop surface animation
   surfaceGroup.classList.remove('surface-line');
 } else {
   setTimeout(run, 200);
