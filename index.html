@@ -7,11 +7,12 @@
 
 <style>
 :root{
-  --bg:#f4f8f7;
+  --bg:#f5f7f6;
   --card:#ffffff;
   --muted:#6b7280;
-  --accent:#007c6f;
-  --water:#1fa3d6;
+  --esrt-green:#00594c;
+  --esrt-blue:#007fa3;
+  --water:#007fa3;
 }
 
 body{
@@ -28,22 +29,18 @@ body{
 .module{
   width:980px;
   max-width:100%;
-  background:linear-gradient(180deg,#fff 0%,#fafcfb 100%);
-  border-radius:16px;
-  box-shadow:0 10px 30px rgba(12,18,20,0.06);
-  padding:28px;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.05);
+  padding:40px;
   display:flex;
-  gap:40px;
+  gap:60px;
   align-items:center;
   flex-wrap:wrap;
 }
 
 .glass-card{
-  background:var(--card);
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 6px 18px rgba(4,8,10,0.06);
-  text-align:center;
+  padding:10px;
 }
 
 .info{
@@ -51,41 +48,45 @@ body{
   min-width:260px;
   display:flex;
   flex-direction:column;
-  gap:12px;
+  gap:16px;
 }
 
-.title{ font-size:18px; font-weight:600; }
-.subtitle{ font-size:13px; color:var(--muted); }
+.title{
+  font-size:20px;
+  font-weight:600;
+  color:var(--esrt-green);
+}
+
+.subtitle{
+  font-size:14px;
+  color:var(--muted);
+}
 
 .stats-row{
   display:flex;
-  gap:18px;
+  gap:24px;
   flex-wrap:wrap;
 }
 
 .stat{
-  background:var(--card);
-  padding:12px 14px;
-  border-radius:10px;
-  box-shadow:0 6px 16px rgba(6,10,12,0.04);
-  min-width:180px;
+  min-width:200px;
 }
 
 .big{
-  font-size:28px;
+  font-size:32px;
   font-weight:700;
-  color:var(--accent);
+  color:var(--esrt-green);
 }
 
 .small{
-  font-size:13px;
+  font-size:14px;
   color:var(--muted);
 }
 
 .meter{
   height:10px;
-  background:#e6f6fb;
-  border-radius:8px;
+  background:#e6f2f4;
+  border-radius:6px;
   overflow:hidden;
   margin-top:8px;
 }
@@ -93,7 +94,7 @@ body{
 .meter-fill{
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,var(--water),#087ea8);
+  background:linear-gradient(90deg,var(--esrt-green),var(--esrt-blue));
   transition:width 1.4s cubic-bezier(.2,.9,.3,1);
 }
 
@@ -109,17 +110,17 @@ body{
 
   <!-- GLASS -->
   <div class="glass-card">
-    <svg viewBox="0 0 220 360" width="220" height="360">
+    <svg viewBox="0 0 200 360" width="200" height="360">
 
       <defs>
-        <!-- Glass shape (single continuous shape) -->
+
+        <!-- Minimal architectural straight glass -->
         <path id="glassShape"
-          d="M40 20
-             Q40 10 110 10
-             Q180 10 180 20
+          d="M60 20
+             L140 20
              L160 320
-             Q160 340 110 345
-             Q60 340 60 320
+             Q160 340 100 345
+             Q40 340 40 320
              Z"/>
 
         <clipPath id="clipGlass">
@@ -127,46 +128,83 @@ body{
         </clipPath>
 
         <linearGradient id="waterGrad" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#3cc9f0"/>
-          <stop offset="100%" stop-color="#087ea8"/>
+          <stop offset="0%" stop-color="#0093b5"/>
+          <stop offset="100%" stop-color="#00594c"/>
         </linearGradient>
 
+        <!-- Wide wave for seamless looping -->
         <path id="wavePath"
-          d="M0 20 Q30 0 60 20 T120 20 T180 20 T240 20 V60 H0 Z"/>
+          d="M0 30
+             Q40 10 80 30
+             T160 30
+             T240 30
+             V80 H0 Z"/>
+
       </defs>
 
       <!-- Glass outline -->
       <use href="#glassShape"
-           fill="none"
-           stroke="#d6eaea"
-           stroke-width="4"/>
+           fill="rgba(255,255,255,0.25)"
+           stroke="#cfd8dc"
+           stroke-width="3"/>
 
-      <!-- Water -->
+      <!-- Subtle highlight -->
+      <path d="M70 40 L85 320"
+            stroke="rgba(255,255,255,0.4)"
+            stroke-width="6"
+            opacity="0.4"/>
+
+      <!-- WATER -->
       <g clip-path="url(#clipGlass)">
+
         <rect id="waterRect"
               x="0"
               y="320"
-              width="220"
+              width="200"
               height="0"
               fill="url(#waterGrad)"
               opacity="0.95"/>
 
         <g id="waveGroup">
-          <use href="#wavePath" id="wave1"
-               fill="#1fa3d6" opacity="0.9"/>
-          <use href="#wavePath" id="wave2"
-               fill="#0f8fbf" opacity="0.5"/>
+
+          <!-- Wave 1 -->
+          <use href="#wavePath"
+               fill="#007fa3"
+               opacity="0.6">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              from="0 0"
+              to="-160 0"
+              dur="4s"
+              repeatCount="indefinite"/>
+          </use>
+
+          <!-- Wave 2 -->
+          <use href="#wavePath"
+               fill="#00594c"
+               opacity="0.35"
+               x="160">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              from="0 0"
+              to="-160 0"
+              dur="6s"
+              repeatCount="indefinite"/>
+          </use>
+
         </g>
       </g>
 
     </svg>
 
-    <div style="margin-top:12px">
+    <div style="margin-top:14px;text-align:center">
       <div id="glassPercent"
-           style="font-size:20px;font-weight:700;color:var(--accent)">
+           style="font-size:20px;font-weight:700;color:var(--esrt-green)">
         -6.15%
       </div>
-      <div style="font-size:13px;color:var(--muted)">
+      <div style="font-size:14px;color:var(--muted)">
         decrease vs 2023
       </div>
     </div>
@@ -215,9 +253,6 @@ const baselineFill = 0.5;
 const finalFill = baselineFill * (1 - percentDecrease/100);
 
 const waterRect = document.getElementById('waterRect');
-const waveGroup = document.getElementById('waveGroup');
-const wave1 = document.getElementById('wave1');
-const wave2 = document.getElementById('wave2');
 const meterFill = document.getElementById('meterFill');
 
 const INNER_TOP = 20;
@@ -231,7 +266,8 @@ function setWater(level){
   const y = INNER_BOTTOM - h;
   waterRect.setAttribute('y', y);
   waterRect.setAttribute('height', h);
-  waveGroup.setAttribute('transform', `translate(0, ${y-20})`);
+  document.getElementById('waveGroup')
+    .setAttribute('transform', `translate(0, ${y-30})`);
 }
 
 function animate(from,to,duration,cb){
@@ -265,15 +301,6 @@ function run(){
   animateNumber("intensityValue",intensityVal,3);
 
   meterFill.style.width=(intensityVal/0.6*100)+"%";
-
-  let waveX=0;
-  function moveWave(){
-    waveX+=0.6;
-    wave1.setAttribute("x",(waveX%240)-240);
-    wave2.setAttribute("x",((waveX*0.7)%240)-240);
-    requestAnimationFrame(moveWave);
-  }
-  moveWave();
 }
 
 setTimeout(run,200);
