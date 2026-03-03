@@ -10,10 +10,8 @@
   --bg:#f5f7f6;
   --card:#ffffff;
   --muted:#6b7280;
-
   --esrt-green:#00594c;
   --esrt-blue:#007fa3;
-  --success:#1f8a4c;
 }
 
 *{box-sizing:border-box}
@@ -103,7 +101,6 @@ body{
   color:var(--muted);
 }
 
-/* Smooth dimming */
 .bulb-core,
 .bulb-glow{
   transition: all 900ms cubic-bezier(.2,.9,.3,1);
@@ -119,21 +116,22 @@ body{
 
 <div class="container">
 
-  <!-- LEFT: LIGHTBULB -->
+  <!-- LIGHTBULB -->
   <div class="visual">
 
     <svg viewBox="0 0 220 320" width="200" height="280">
 
       <defs>
-        <radialGradient id="bulbGlassGrad" cx="50%" cy="35%" r="60%">
+        <!-- Clean neutral glass -->
+        <radialGradient id="glassGrad" cx="50%" cy="40%" r="60%">
           <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="70%" stop-color="#f1f1f1"/>
-          <stop offset="100%" stop-color="#e6e6e6"/>
+          <stop offset="100%" stop-color="#f4f4f4"/>
         </radialGradient>
 
-        <radialGradient id="lightGlowGrad" cx="50%" cy="45%" r="65%">
+        <!-- Soft glow -->
+        <radialGradient id="glowGrad" cx="50%" cy="45%" r="65%">
           <stop offset="0%" stop-color="#ffe7a6"/>
-          <stop offset="60%" stop-color="#ffd46a"/>
+          <stop offset="70%" stop-color="#ffd46a"/>
           <stop offset="100%" stop-color="rgba(255,212,106,0)"/>
         </radialGradient>
 
@@ -145,13 +143,13 @@ body{
 
       <!-- Glow -->
       <g id="glowGroup" class="bulb-glow" transform="translate(110,100)">
-        <circle cx="0" cy="0" r="80" fill="url(#lightGlowGrad)" opacity="1"/>
+        <circle cx="0" cy="0" r="80" fill="url(#glowGrad)" opacity="1"/>
       </g>
 
       <!-- Bulb -->
       <g id="coreGroup" class="bulb-core">
 
-        <!-- Glass -->
+        <!-- Glass (no dark stroke) -->
         <path d="
           M110 40
           C150 40, 175 75, 175 115
@@ -162,32 +160,32 @@ body{
           C70 185, 45 150, 45 115
           C45 75, 70 40, 110 40
           Z"
-          fill="url(#bulbGlassGrad)"
-          stroke="rgba(0,0,0,0.08)"
-          stroke-width="2"/>
+          fill="url(#glassGrad)"
+          stroke="rgba(0,0,0,0.03)"
+          stroke-width="1"/>
 
-        <!-- Highlight -->
-        <path d="M82 65 C72 110, 80 165, 95 195"
-              stroke="rgba(255,255,255,0.7)"
-              stroke-width="7"
+        <!-- Subtle highlight -->
+        <path d="M85 70 C75 115, 85 170, 98 200"
+              stroke="rgba(255,255,255,0.6)"
+              stroke-width="6"
               stroke-linecap="round"
-              opacity="0.7"/>
+              opacity="0.6"/>
 
         <!-- Neck -->
         <rect x="92" y="235" width="36" height="22"
-              fill="#e8ecef"
-              stroke="rgba(0,0,0,0.05)"
+              fill="#f0f2f3"
+              stroke="rgba(0,0,0,0.04)"
               stroke-width="1"/>
 
         <!-- Screw base -->
         <rect x="86" y="257" width="48" height="55"
               rx="6"
               fill="url(#metalGrad)"
-              stroke="rgba(0,0,0,0.08)"
+              stroke="rgba(0,0,0,0.05)"
               stroke-width="1"/>
 
         <!-- Screw ridges -->
-        <g stroke="rgba(0,0,0,0.12)" stroke-width="2">
+        <g stroke="rgba(0,0,0,0.08)" stroke-width="2">
           <line x1="86" y1="270" x2="134" y2="270"/>
           <line x1="86" y1="285" x2="134" y2="285"/>
           <line x1="86" y1="300" x2="134" y2="300"/>
@@ -204,9 +202,8 @@ body{
 
   </div>
 
-  <!-- RIGHT -->
+  <!-- INFO -->
   <div class="info">
-
     <div>
       <div class="title">Energy Performance — 2024</div>
       <div class="subtitle">
@@ -230,7 +227,6 @@ body{
         </div>
       </div>
     </div>
-
   </div>
 
 </div>
