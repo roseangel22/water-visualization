@@ -11,10 +11,8 @@
   --card:#ffffff;
   --muted:#6b7280;
 
-  /* ESRT-inspired palette */
   --esrt-green:#00594c;
   --esrt-blue:#007fa3;
-
   --success:#1f8a4c;
 }
 
@@ -44,7 +42,6 @@ body{
   flex-wrap:wrap;
 }
 
-/* LEFT VISUAL */
 .visual{
   width:300px;
   display:flex;
@@ -66,7 +63,6 @@ body{
   max-width:260px;
 }
 
-/* RIGHT INFO */
 .info{
   flex:1;
   min-width:280px;
@@ -107,14 +103,7 @@ body{
   color:var(--muted);
 }
 
-.offset{
-  margin-top:10px;
-  font-size:16px;
-  font-weight:600;
-  color:var(--success);
-}
-
-/* Smooth transitions */
+/* Smooth dimming */
 .bulb-core,
 .bulb-glow{
   transition: all 900ms cubic-bezier(.2,.9,.3,1);
@@ -133,13 +122,13 @@ body{
   <!-- LEFT: LIGHTBULB -->
   <div class="visual">
 
-    <svg id="lightSvg" viewBox="0 0 220 320" width="200" height="280">
+    <svg viewBox="0 0 220 320" width="200" height="280">
 
       <defs>
         <radialGradient id="bulbGlassGrad" cx="50%" cy="35%" r="60%">
-          <stop offset="0%" stop-color="#fffdf8"/>
-          <stop offset="70%" stop-color="#f3efe8"/>
-          <stop offset="100%" stop-color="#e8e3da"/>
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="70%" stop-color="#f1f1f1"/>
+          <stop offset="100%" stop-color="#e6e6e6"/>
         </radialGradient>
 
         <radialGradient id="lightGlowGrad" cx="50%" cy="45%" r="65%">
@@ -177,22 +166,12 @@ body{
           stroke="rgba(0,0,0,0.08)"
           stroke-width="2"/>
 
-        <!-- Inner Light -->
-        <ellipse id="lightCore"
-
-                 cx="110"
-
-                 cy="120"
-
-                 rx="46"
-
-                 ry="38"
-
-                 fill="rgba(255,220,120,0.9)"/>
- 
-
         <!-- Highlight -->
-       
+        <path d="M82 65 C72 110, 80 165, 95 195"
+              stroke="rgba(255,255,255,0.7)"
+              stroke-width="7"
+              stroke-linecap="round"
+              opacity="0.7"/>
 
         <!-- Neck -->
         <rect x="92" y="235" width="36" height="22"
@@ -225,7 +204,7 @@ body{
 
   </div>
 
-  <!-- RIGHT: INFO -->
+  <!-- RIGHT -->
   <div class="info">
 
     <div>
@@ -263,7 +242,6 @@ const percentEl = document.getElementById("percentValue");
 const bulbLabel = document.getElementById("bulbPercent");
 const glow = document.getElementById("glowGroup");
 const core = document.getElementById("coreGroup");
-const lightCore = document.getElementById("lightCore");
 
 function easeOut(t){ return 1 - Math.pow(1 - t, 3); }
 
@@ -280,7 +258,6 @@ function animateNumber(el,end,dec){
 function setBrightness(level){
   core.style.filter = `brightness(${level})`;
   glow.style.opacity = level;
-  lightCore.style.opacity = level;
 }
 
 function run(){
